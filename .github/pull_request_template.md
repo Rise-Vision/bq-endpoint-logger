@@ -25,5 +25,5 @@ For changes, a mini-design [should be included] with multiple [considerations] a
 
 [should be included]: https://docs.google.com/document/d/1l-qMt55yYzql9DlwqyPHftUb120f-xNRyK3Rspird2w/edit#heading=h.2g0bwllttzin
 [considerations]:
-https://docs.google.com/document/d/1T2dpSocnrU-m_judcsBFaHtpJlJeJy3HKuGbZM8VjKk/edit#heading=h.qxdquqe4r6rj
+https://docs.google.com/document/d/12UT3FtX5eGy40Ke0bNxac0aEcVl7Z9pewMW9ZwWnpfs/edit?ts=5fa243fb#bookmark=id.5f9yuibn0j4v
 [Documentation]: https://drive.google.com/drive/folders/1YAMp2-VWCfUvtubZGqDwhF2e-5z1Xxtb
