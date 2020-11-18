@@ -5,7 +5,7 @@ import {retry} from "./retry-fn.js";
 
 const streamTableEntry = (fields = {}, url)=>{
   const insertData = {...INSERT_SCHEMA};
-  fields.timestamp = new Date().toISOString();
+  fields.timestamp = "AUTO";
   insertData.rows[0].json = fields;
 
   return getToken().then(token=>retry(()=>fetch(url, {
