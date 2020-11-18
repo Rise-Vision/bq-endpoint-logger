@@ -1,0 +1,22 @@
+{
+  "name": "bq-endpoint-logger",
+  "version": "1.0.0",
+  "description": "This library is meant to be used to standardize logging across all Rise Vision endpoints. It should facilitate a consistent table schema, uptime semantics, and cost analysis via standardized fields for GCS request.",
+  "main": "logger.js",
+  "scripts": {
+    "test": "eslint src && karma start karma.conf.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^7.13.0",
+    "karma": "^5.2.3",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-mocha": "^2.0.1",
+    "karma-mocha-reporter": "^2.2.5",
+    "mocha": "^8.2.1"
+  }
+}
