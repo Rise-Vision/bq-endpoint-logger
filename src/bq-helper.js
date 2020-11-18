@@ -15,7 +15,9 @@ const streamTableEntry = (fields = {}, url)=>{
       "Authorization": `Bearer ${token}`
     },
     body: JSON.stringify(insertData)
-  })));
+  })))
+  .then(resp=>resp.json())
+  .then(json=>json.error ? Promise.reject(Error(json.error.message)) : json);
 };
 
 export const streamEventsTableEntry = fields=>{

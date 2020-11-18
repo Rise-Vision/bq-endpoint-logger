@@ -16,3 +16,5 @@ export const getToken = ()=>{
   })
   .catch(console.error);
 };
+
+export const resetToken = ()=>{refreshDate = 0};
