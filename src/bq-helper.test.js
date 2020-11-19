@@ -4,11 +4,13 @@ describe("BQ Helper", ()=>{ // eslint-disable-line max-lines-per-function
   before(()=>{
     window.setTimeoutOrig = window.setTimeout;
     window.console.errorOrig = window.console.error;
+    window.fetchOrig = window.fetch;
   });
 
   afterEach(()=>{
     window.setTimeout = window.setTimeoutOrig;
     window.console.error = window.console.errorOrig;
+    window.fetch = window.fetchOrig;
   });
 
   it("requests token and streams to bigquery", ()=>{
