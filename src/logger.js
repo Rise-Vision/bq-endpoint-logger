@@ -1,27 +1,72 @@
-import {streamHeartbeatTableEntry} from "./bq-helper.js";
+import {streamHeartbeatTableEntry, streamEventsTableEntry} from "./bq-helper.js";
+import {resetToken} from "./token.js";
+import {setEndpointId, getLogLevel, resetLevel} from "./log-level.js";
 
 const heartbeatIntervalMS = 300000;
 
-const heartbeatFields = [
+const initMandatoryFields = [
   "endpointId",
-  "scheduleId",
-  "presentationId",
-  "placeholderId",
-  "componentId",
-  "scheduleItemUrl",
-  "eventApp",
+  "endpointType",
+  "endpointUrl",
+  "scheduleId"
 ];
 
-const heartbeatFieldsError = `Expected heartbeat parameters ${heartbeatFields}`;
+const infoMandatoryFields = [
+  "eventApp",
+  "eventDetails"
+];
 
-export const uptimeHeartbeat = (config = {})=>{
-  if (!heartbeatFields.every(field=>typeof config[field] !== "undefined")) {
-    return Promise.reject(Error(heartbeatFieldsError));
+const heartbeatMandatoryFields = [
+  "eventApp"
+];
+
+const gcsFileRequestParameters = [
+  "endpointId",
+  "endpointType",
+  "scheduleId"
+];
+
+const initFieldsError = `Expected init parameters ${initMandatoryFields}`;
+const heartbeatFieldsError = `Expected heartbeat parameters ${heartbeatMandatoryFields}`;
+const infoFieldsError = `Expected info parameters ${infoMandatoryFields}`;
+
+export const init = (initConfig = {})=>{
+  if (!initMandatoryFields.every(field=>typeof initConfig[field] !== "undefined")) {
+    throw Error(initFieldsError);
   }
 
-  return streamHeartbeatTableEntry(config);
-};
+  resetToken();
+  resetLevel();
+  setEndpointId(initConfig.endpointId);
 
-export const getHeartbeatIntervalMS = ()=>{
-  return heartbeatIntervalMS;
-}
+  return {
+    getHeartbeatIntervalMS() {
+      return heartbeatIntervalMS;
+    },
+    uptimeHeartbeat(config = {}) {
+      if (!heartbeatMandatoryFields.every(field=>typeof config[field] !== "undefined")) {
+        return Promise.reject(Error(heartbeatFieldsError));
+      }
+
+      return streamHeartbeatTableEntry({
+        ...config,
+        endpointId: initConfig.endpointId,
+        scheduleId: initConfig.scheduleId
+      });
+    },
+    info(config = {}) {
+      if (!infoMandatoryFields.every(field=>typeof config[field] !== "undefined")) {
+        return Promise.reject(Error(infoFieldsError));
+      }
+
+      return getLogLevel()
+      .then(level=>level === "INFO" ?
+        streamEventsTableEntry(config) :
+        Promise.resolve())
+      .catch(console.error);
+    },
+    getRiseFileRequestParameters() {
+      return gcsFileRequestParameters;
+    }
+  };
+};
