@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="module">
+      import {init} from "./build/prod.js";
+      const logger = init({
+        endpointId: "e2e-endpoint-id",
+        endpointType: "e2e-endpoint-type",
+        endpointUrl: "e2e-endpoint-url",
+        scheduleId: "e2e-schedule-id"
+      });
+
+      logger.uptimeHeartbeat({
+        eventApp: "e2e-event-app",
+        componentId: window.location.search.split("=")[1]
+      });
+    </script>
+  </head>
+  <body>test</body>
+</html>
