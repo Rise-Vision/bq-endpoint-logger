@@ -1,6 +1,6 @@
-import {getLogLevel, reset} from "./log-level.js";
+import {getLogLevel, resetLevel} from "./log-level.js";
 
-describe.only("Log Level", ()=>{ // eslint-disable-line max-lines-per-function
+describe("Log Level", ()=>{ // eslint-disable-line max-lines-per-function
   before(()=>{
     window.setTimeoutOrig = window.setTimeout;
     window.fetchOrig = window.fetch;
@@ -9,7 +9,7 @@ describe.only("Log Level", ()=>{ // eslint-disable-line max-lines-per-function
   afterEach(()=>{
     window.setTimeout = window.setTimeoutOrig;
     window.fetch = window.fetchOrig;
-    reset();
+    resetLevel();
   });
 
   it("retrieves log level", ()=>{
