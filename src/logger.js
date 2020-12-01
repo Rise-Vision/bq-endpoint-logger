@@ -1,6 +1,6 @@
 import {streamHeartbeatTableEntry, streamEventsTableEntry} from "./bq-helper.js";
 import {resetToken} from "./token.js";
-import {setEndpointId, getLogLevel, resetLevel} from "./log-level.js";
+import {setEndpointId, getLogLevel} from "./log-level.js";
 
 const heartbeatIntervalMS = 300000;
 
@@ -36,7 +36,6 @@ export const init = (initConfig = {})=>{
   }
 
   resetToken();
-  resetLevel();
   setEndpointId(initConfig.endpointId);
 
   return {
@@ -61,7 +60,7 @@ export const init = (initConfig = {})=>{
 
       return getLogLevel()
       .then(level=>level === "INFO" ?
-        streamEventsTableEntry(config) :
+        streamEventsTableEntry({...config, ...initConfig}) :
         Promise.resolve())
       .catch(console.error);
     },

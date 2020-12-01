@@ -1,4 +1,5 @@
 import {init} from "./logger.js";
+import {reset} from "./log-level.js";
 
 describe("Logger", ()=>{ // eslint-disable-line max-lines-per-function
   const initConfig = {
@@ -57,6 +58,7 @@ describe("Logger", ()=>{ // eslint-disable-line max-lines-per-function
       };
 
       const logger = init(initConfig);
+      reset();
       return logger.info({
         eventApp: "test-event-app",
         eventDetails: "test-event-details"

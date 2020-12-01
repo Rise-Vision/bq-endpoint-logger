@@ -4,14 +4,19 @@
   "description": "This library is meant to be used to standardize logging across all Rise Vision endpoints. It should facilitate a consistent table schema, uptime semantics, and cost analysis via standardized fields for GCS request.",
   "main": "logger.js",
   "scripts": {
-    "test": "eslint src && karma start karma.conf.js"
+    "test": "eslint src && karma start karma.conf.js",
+    "build-dev": "esbuild src/logger.js --bundle --minify --format=esm --outfile=build/dev.js --sourcemap",
+    "build-prod": "esbuild src/logger.js --bundle --minify --format=esm --outfile=build/prod.js",
+    "build": "npm run build-dev && npm run build-prod"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "chai": "^4.2.0",
+    "esbuild": "^0.8.11",
     "eslint": "^7.13.0",
+    "http-server": "^0.12.3",
     "karma": "^5.2.3",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.1.0",
