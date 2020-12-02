@@ -7,7 +7,7 @@
     "test": "eslint src && karma start karma.conf.js",
     "build-dev": "esbuild src/logger.js --bundle --minify --format=esm --outfile=build/dev.js --sourcemap",
     "build-prod": "esbuild src/logger.js --bundle --minify --format=esm --outfile=build/prod.js",
-    "build-cjs": "esbuild src/logger.js --bundle --minify --format=esm --outfile=build/cjs.js --sourcemap",
+    "build-cjs": "esbuild src/logger.js --bundle --minify --format=cjs --outfile=build/cjs.js --sourcemap",
     "build": "npm run build-dev && npm run build-prod && npm run build-cjs"
   },
   "keywords": [],
