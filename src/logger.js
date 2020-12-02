@@ -4,21 +4,36 @@ import {setEndpointId, getLogLevel} from "./log-level.js";
 
 const heartbeatIntervalMS = 300000;
 
-const initMandatoryFields = [
-  "endpointId",
-  "endpointType",
-  "endpointUrl",
-  "scheduleId"
+const levels = [
+  "DEBUG", "INFO", "WARNING", "ERROR"
 ];
 
-const infoMandatoryFields = [
-  "eventApp",
-  "eventDetails"
-];
-
-const heartbeatMandatoryFields = [
-  "eventApp"
-];
+const mandatoryFields = {
+  "INIT": [
+    "endpointId",
+    "endpointType",
+    "endpointUrl",
+    "scheduleId"
+  ],
+  "DEBUG": [
+    "eventApp", "eventDetails"
+  ],
+  "INFO": [
+    "eventApp", "eventDetails"
+  ],
+  "WARNING": [
+    "eventApp", "eventDetails"
+  ],
+  "ERROR": [
+    "eventApp", "eventErrorCode"
+  ],
+  "IMPORTANT": [
+    "eventApp", "eventDetails"
+  ],
+  "HEARTBEAT": [
+    "eventApp"
+  ]
+};
 
 const gcsFileRequestParameters = [
   "endpointId",
@@ -26,13 +41,25 @@ const gcsFileRequestParameters = [
   "scheduleId"
 ];
 
-const initFieldsError = `Expected init parameters ${initMandatoryFields}`;
-const heartbeatFieldsError = `Expected heartbeat parameters ${heartbeatMandatoryFields}`;
-const infoFieldsError = `Expected info parameters ${infoMandatoryFields}`;
+const fieldsError = type=>{
+  return `Expected ${type} parameters ${mandatoryFields[type]}`;
+}
+
+const recordLogType = (type = "INFO", config)=>{
+  if (!mandatoryFields[type].every(field=>typeof config[field] !== "undefined")) {
+    return Promise.reject(Error(fieldsError(type)));
+  }
+
+  return getLogLevel()
+    .then(level=>type === "IMPORTANT" || levels.indexOf(type) >= levels.indexOf(level) ?
+      streamEventsTableEntry(config) :
+      Promise.resolve())
+    .catch(console.error);
+}
 
 export const init = (initConfig = {})=>{
-  if (!initMandatoryFields.every(field=>typeof initConfig[field] !== "undefined")) {
-    throw Error(initFieldsError);
+  if (!mandatoryFields.INIT.every(field=>typeof initConfig[field] !== "undefined")) {
+    throw Error(fieldsError("INIT"));
   }
 
   resetToken();
@@ -43,8 +70,8 @@ export const init = (initConfig = {})=>{
       return heartbeatIntervalMS;
     },
     uptimeHeartbeat(config = {}) {
-      if (!heartbeatMandatoryFields.every(field=>typeof config[field] !== "undefined")) {
-        return Promise.reject(Error(heartbeatFieldsError));
+      if (!mandatoryFields.HEARTBEAT.every(field=>typeof config[field] !== "undefined")) {
+        return Promise.reject(Error(fieldsError("HEARTBEAT")));
       }
 
       return streamHeartbeatTableEntry({
@@ -54,15 +81,19 @@ export const init = (initConfig = {})=>{
       });
     },
     info(config = {}) {
-      if (!infoMandatoryFields.every(field=>typeof config[field] !== "undefined")) {
-        return Promise.reject(Error(infoFieldsError));
-      }
-
-      return getLogLevel()
-      .then(level=>level === "INFO" ?
-        streamEventsTableEntry({...config, ...initConfig}) :
-        Promise.resolve())
-      .catch(console.error);
+      return recordLogType("INFO", {...config, ...initConfig});
+    },
+    error(config = {}) {
+      return recordLogType("ERROR", {...config, ...initConfig});
+    },
+    warning(config = {}) {
+      return recordLogType("WARNING", {...config, ...initConfig});
+    },
+    debug(config = {}) {
+      return recordLogType("DEBUG", {...config, ...initConfig});
+    },
+    important(config = {}) {
+      return recordLogType("IMPORTANT", {...config, ...initConfig});
     },
     getRiseFileRequestParameters() {
       return gcsFileRequestParameters;

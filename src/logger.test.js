@@ -32,7 +32,7 @@ describe("Logger", ()=>{ // eslint-disable-line max-lines-per-function
     });
   });
 
-  describe("Logger INFO", ()=>{
+  describe("Logger INFO", ()=>{ // eslint-disable-line max-lines-per-function
     it("doesn't log INFO level by default", ()=>{
       let fetchedUrls = [];
 
@@ -46,7 +46,7 @@ describe("Logger", ()=>{ // eslint-disable-line max-lines-per-function
         eventApp: "test-event-app",
         eventDetails: "test-event-details"
       })
-      .then(assert(!fetchedUrls.some(url=>url.includes("bigquery"))));
+      .then(()=>assert(!fetchedUrls.some(url=>url.includes("eventLog/insertAll"))));
     })
 
     it("logs INFO level when loglevel is INFO", ()=>{
@@ -65,5 +65,40 @@ describe("Logger", ()=>{ // eslint-disable-line max-lines-per-function
       })
       .then(()=>assert(fetchedUrls.some(url=>url.includes("eventLog/insertAll"))));
     });
+
+    it("logs INFO level when loglevel is DEBUG", ()=>{
+      let fetchedUrls = [];
+
+      window.fetch = url=>{
+        fetchedUrls.push(url);
+        return Promise.resolve({json(){return {logLevel: "DEBUG"}}});
+      };
+
+      const logger = init(initConfig);
+      reset();
+      return logger.info({
+        eventApp: "test-event-app",
+        eventDetails: "test-event-details"
+      })
+      .then(()=>assert(fetchedUrls.some(url=>url.includes("eventLog/insertAll"))));
+    });
+  });
+
+  describe("Logger ERROR", ()=>{ // eslint-disable-line max-lines-per-function
+    it("logs with default log level", ()=>{
+      let fetchedUrls = [];
+
+      window.fetch = url=>{
+        fetchedUrls.push(url);
+        return Promise.resolve({json(){return {}}});
+      };
+
+      const logger = init(initConfig);
+      return logger.error({
+        eventApp: "test-event-app",
+        eventErrorCode: "test-error-code"
+      })
+      .then(()=>assert(fetchedUrls.some(url=>url.includes("eventLog/insertAll"))));
+    })
   });
 });
