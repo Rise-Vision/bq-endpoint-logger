@@ -2,14 +2,13 @@
   "name": "bq-endpoint-logger",
   "version": "1.0.0",
   "description": "This library is meant to be used to standardize logging across all Rise Vision endpoints. It should facilitate a consistent table schema, uptime semantics, and cost analysis via standardized fields for GCS request.",
-  "main": "logger.js",
+  "main": "build/cjs.js",
   "scripts": {
     "test": "eslint src && karma start karma.conf.js",
     "build-dev": "esbuild src/logger.js --bundle --minify --format=esm --outfile=build/dev.js --sourcemap",
     "build-prod": "esbuild src/logger.js --bundle --minify --format=esm --outfile=build/prod.js",
-    "build-cjs-prod": "esbuild src/logger.js --bundle --minify --format=cjs --outfile=build/prod-cjs.js",
-    "build-cjs-dev": "esbuild src/logger.js --bundle --minify --format=esm --outfile=build/dev-cjs.js --sourcemap",
-    "build": "npm run build-dev && npm run build-prod && npm run build-cjs-prod && npm run build-cjs-dev"
+    "build-cjs": "esbuild src/logger.js --bundle --minify --format=esm --outfile=build/cjs.js --sourcemap",
+    "build": "npm run build-dev && npm run build-prod && npm run build-cjs"
   },
   "keywords": [],
   "author": "",
