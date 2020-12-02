@@ -7,7 +7,8 @@
     "test": "eslint src && karma start karma.conf.js",
     "build-dev": "esbuild src/logger.js --bundle --minify --format=esm --outfile=build/dev.js --sourcemap",
     "build-prod": "esbuild src/logger.js --bundle --minify --format=esm --outfile=build/prod.js",
-    "build-cjs": "esbuild src/logger.js --bundle --minify --format=cjs --outfile=build/cjs.js --sourcemap",
+    "prebuild-cjs": "babel --presets @babel/preset-env src -d build/es5",
+    "build-cjs": "esbuild build/es5/logger.js --bundle --minify --format=cjs --outfile=build/cjs.js",
     "build": "npm run build-dev && npm run build-prod && npm run build-cjs",
     "prepare": "npm run build-cjs"
   },
@@ -15,8 +16,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/cli": "^7.12.8",
+    "@babel/core": "^7.12.9",
+    "@babel/preset-env": "^7.12.7",
     "chai": "^4.2.0",
-    "esbuild": "^0.8.11",
+    "esbuild": "^0.8.17",
     "eslint": "^7.13.0",
     "http-server": "^0.12.3",
     "karma": "^5.2.3",
