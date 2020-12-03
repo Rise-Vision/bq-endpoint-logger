@@ -9,6 +9,14 @@ describe("Logger", ()=>{ // eslint-disable-line max-lines-per-function
     "scheduleId": "test-schedule-id"
   };
 
+  beforeEach(reset);
+
+  describe("Init", ()=>{
+    it("requires endpointId", ()=>{
+      assert.throws(()=>init({}), /endpointId/)
+    });
+  });
+
   describe("Logger Heartbeats (integration)", ()=>{
     before(()=>{
       window.setTimeoutOrig = window.setTimeout;
@@ -33,6 +41,25 @@ describe("Logger", ()=>{ // eslint-disable-line max-lines-per-function
   });
 
   describe("Logger INFO", ()=>{ // eslint-disable-line max-lines-per-function
+    it("includes endpointId from init fields", ()=>{
+      let fetchedUrls = [];
+      let loggedData = {};
+
+      window.fetch = (url, data)=>{
+        fetchedUrls.push(url);
+        loggedData = data;
+        return Promise.resolve({json(){return {logLevel: "INFO"}}});
+      };
+
+      const logger = init(initConfig);
+      return logger.info({
+        eventApp: "test-event-app",
+        eventDetails: "test-event-details"
+      })
+      .then(()=>assert(fetchedUrls.some(url=>url.includes("eventLog/insertAll"))))
+      .then(()=>assert(loggedData.body.includes("test-endpoint-id")));
+    });
+
     it("doesn't log INFO level by default", ()=>{
       let fetchedUrls = [];
 
@@ -47,7 +74,7 @@ describe("Logger", ()=>{ // eslint-disable-line max-lines-per-function
         eventDetails: "test-event-details"
       })
       .then(()=>assert(!fetchedUrls.some(url=>url.includes("eventLog/insertAll"))));
-    })
+    });
 
     it("logs INFO level when loglevel is INFO", ()=>{
       let fetchedUrls = [];
@@ -58,7 +85,6 @@ describe("Logger", ()=>{ // eslint-disable-line max-lines-per-function
       };
 
       const logger = init(initConfig);
-      reset();
       return logger.info({
         eventApp: "test-event-app",
         eventDetails: "test-event-details"
@@ -75,7 +101,6 @@ describe("Logger", ()=>{ // eslint-disable-line max-lines-per-function
       };
 
       const logger = init(initConfig);
-      reset();
       return logger.info({
         eventApp: "test-event-app",
         eventDetails: "test-event-details"
