@@ -34,8 +34,13 @@ describe("Logger", ()=>{ // eslint-disable-line max-lines-per-function
       };
 
       const logger = init(initConfig);
+      const heartbeatConfig = {
+        eventApp: "test-event-app",
+        eventAppVersion: "test-event-app-version"
+      }
+
       // library client would call heartbeat as a setInterval argument
-      return logger.uptimeHeartbeat({eventApp: "test-event-app"})
+      return logger.uptimeHeartbeat(heartbeatConfig)
       .then(json=>assert.equal(json.kind, "bigquery#tableDataInsertAllResponse"));
     });
   });

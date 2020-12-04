@@ -1,18 +1,20 @@
 import {GRANT_URL} from "./config.js";
+import {retry} from "./retry-fn.js";
 
 let refreshDate = 0;
-let refreshToken = "";
+let tokenPromise = null;
 
 export const getToken = ()=>{
-  if (new Date() - refreshDate < (60 * 60 - 20) * 1000) {
-    return Promise.resolve(refreshToken);
+  if (new Date() - refreshDate > (60 * 60 - 20) * 1000) {
+    tokenPromise = null;
   }
 
-  return fetch(GRANT_URL, {method: "POST"})
+  return tokenPromise = tokenPromise ||
+  retry(()=>fetch(GRANT_URL, {method: "POST"}))
   .then(resp=>resp.json())
   .then(json=>{
     refreshDate = new Date() || refreshDate;
-    return refreshToken = json.access_token || refreshToken;
+    return json.access_token;
   })
   .catch(console.error);
 };
