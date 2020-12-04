@@ -33,7 +33,7 @@ describe("BQ Helper", ()=>{ // eslint-disable-line max-lines-per-function
     });
   });
 
-  it("retries but doesn't catch final error", ()=>{
+  it("retries", ()=>{
     let errors = [];
     window.console.error = msg=>{
       errors.push(msg);
@@ -48,7 +48,6 @@ describe("BQ Helper", ()=>{ // eslint-disable-line max-lines-per-function
     window.fetch = ()=>Promise.reject(Error(mockErrorMessage));
 
     return streamHeartbeatTableEntry({})
-    .then(()=>Promise.reject(Error("helper should have rejected")))
     .catch(err=>assert.equal(err.message, mockErrorMessage))
     .then(()=>assert(errors.some(msg=>msg.includes("retries remaining"))));
   });

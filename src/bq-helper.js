@@ -21,7 +21,8 @@ const streamTableEntry = (fields = {}, url)=>{
     Promise.reject(Error(json.error.message)) :
     json.insertErrors && json.insertErrors[0] ?
     Promise.reject(Error(JSON.stringify(json.insertErrors[0].errors[0]))) :
-    json);
+    json)
+  .catch(console.error);
 };
 
 export const streamEventsTableEntry = fields=>{
