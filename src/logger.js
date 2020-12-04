@@ -31,7 +31,8 @@ const mandatoryFields = {
     "eventApp", "eventDetails"
   ],
   "HEARTBEAT": [
-    "eventApp"
+    "eventApp",
+    "eventAppVersion"
   ]
 };
 
@@ -76,6 +77,7 @@ export const init = (initConfig = {})=>{
       return streamHeartbeatTableEntry({
         ...config,
         endpointId: initConfig.endpointId,
+        endpointType: initConfig.endpointType,
         scheduleId: initConfig.scheduleId
       });
     },
