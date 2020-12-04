@@ -8,9 +8,6 @@ const GCS_SERVICE_URL = "https://storage.googleapis.com/storage/v1/b/risevision-
 
 const THROTTLE_MAX_5_MIN = 300000;
 
-// if level does not exist (most common case) gcs 404s with "No such object"
-const LOGLEVEL_NOT_PRESENT = "Loglevel file not present";
-
 const recentlyFetched = ()=>new Date() - (refreshDate || 0) < THROTTLE_MAX_5_MIN;
 
 export const setEndpointId = id=>{
@@ -26,9 +23,10 @@ export const getLogLevel = ()=>{
   return levelPromise = levelPromise || retry(()=>fetch(serviceUrl))
   .then(resp=>{
     refreshDate = new Date();
+    localStorage.setItem("bq-endpoint-logger-fetchdate", refreshDate);
 
     if (resp.status === 404) {
-      return Promise.reject(Error(LOGLEVEL_NOT_PRESENT));
+      return {logLevel: "ERROR"};
     }
 
     return resp.json();
@@ -36,17 +34,11 @@ export const getLogLevel = ()=>{
   .then(json=>{
     const level = json.logLevel || "ERROR";
     localStorage.setItem("bq-endpoint-logger-level", level);
-    localStorage.setItem("bq-endpoint-logger-fetchdate", refreshDate);
     return level;
   })
   .catch(err=>{
-    const level = levelCache || "ERROR";
-
-    if (err.message !== LOGLEVEL_NOT_PRESENT) {
-      console.error(err);
-    }
-
-    return level;
+    console.error(err);
+    return levelCache || "ERROR";
   });
 };
 
