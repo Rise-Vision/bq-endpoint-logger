@@ -75,26 +75,26 @@ export const init = (initConfig = {})=>{
       }
 
       return streamHeartbeatTableEntry({
-        ...config,
         endpointId: initConfig.endpointId,
         endpointType: initConfig.endpointType,
-        scheduleId: initConfig.scheduleId
+        scheduleId: initConfig.scheduleId,
+        ...config
       });
     },
     info(config = {}) {
-      return recordLogType("INFO", {...config, ...initConfig});
+      return recordLogType("INFO", {...initConfig, ...config});
     },
     error(config = {}) {
-      return recordLogType("ERROR", {...config, ...initConfig});
+      return recordLogType("ERROR", {...initConfig, ...config});
     },
     warning(config = {}) {
-      return recordLogType("WARNING", {...config, ...initConfig});
+      return recordLogType("WARNING", {...initConfig, ...config});
     },
     debug(config = {}) {
-      return recordLogType("DEBUG", {...config, ...initConfig});
+      return recordLogType("DEBUG", {...initConfig, ...config});
     },
     important(config = {}) {
-      return recordLogType("IMPORTANT", {...config, ...initConfig});
+      return recordLogType("IMPORTANT", {...initConfig, ...config});
     },
     getRiseFileRequestParameters() {
       return gcsFileRequestParameters;
