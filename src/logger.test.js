@@ -46,7 +46,7 @@ describe("Logger", ()=>{ // eslint-disable-line max-lines-per-function
   });
 
   describe("Logger INFO", ()=>{ // eslint-disable-line max-lines-per-function
-    it("includes endpointId from init fields", ()=>{
+    it("includes endpointId from init fields and severity from type", ()=>{
       let fetchedUrls = [];
       let loggedData = {};
 
@@ -62,7 +62,8 @@ describe("Logger", ()=>{ // eslint-disable-line max-lines-per-function
         eventDetails: "test-event-details"
       })
       .then(()=>assert(fetchedUrls.some(url=>url.includes("eventLog/insertAll"))))
-      .then(()=>assert(loggedData.body.includes("test-endpoint-id")));
+      .then(()=>assert(loggedData.body.includes("test-endpoint-id")))
+      .then(()=>assert(loggedData.body.includes("\"eventSeverity\":\"INFO\"")));
     });
 
     it("doesn't log INFO level by default", ()=>{
