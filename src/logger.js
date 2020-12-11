@@ -53,7 +53,7 @@ const recordLogType = (type = "INFO", config)=>{
 
   return getLogLevel()
     .then(level=>type === "IMPORTANT" || levels.indexOf(type) >= levels.indexOf(level) ?
-      streamEventsTableEntry(config) :
+      streamEventsTableEntry({eventSeverity: type, ...config}) :
       Promise.resolve());
 }
 
