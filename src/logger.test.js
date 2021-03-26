@@ -131,5 +131,30 @@ describe("Logger", ()=>{ // eslint-disable-line max-lines-per-function
       })
       .then(()=>assert(fetchedUrls.some(url=>url.includes("eventLog/insertAll"))));
     })
+
+    it("Rejects errors with null error code", ()=>{
+      let fetchedUrls = [];
+
+      window.fetch = url=>{
+        fetchedUrls.push(url);
+        return Promise.resolve();
+      };
+
+      const logger = init(initConfig);
+
+      return logger.error({
+        eventApp: "test-event-app",
+        eventDetails: "test-event-details",
+        eventErrorCode: null
+      })
+      .then(()=>Promise.reject(Error("Did not reject")))
+      .catch(err=>{
+        const expectedRejection = /Expected ERROR parameters.*eventErrorCode/i;
+
+        return err.message === "Did not reject" ? Promise.reject(err) :
+          expectedRejection.test(err.message) ? Promise.resolve() :
+          Promise.reject(Error(`Unexpected rejection reason: ${err.message}`));
+      });
+    });
   });
 });

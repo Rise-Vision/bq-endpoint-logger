@@ -11,7 +11,22 @@
       });
 
       logger.uptimeHeartbeat({
+        eventApp: "e2e-event-app-heartbeat-test",
+        eventAppVersion: "1",
+        componentId: window.location.search.split("=")[1]
+      });
+
+      logger.error({
+        eventApp: "e2e-event-app-error-test",
+        eventErrorCode: "e2e-test-error-code",
+        componentId: window.location.search.split("=")[1]
+      });
+
+      // Should not be sent unless logLevel config for e2e-endpoint-id is
+      // uploaded to gs://risevision-endpoint-loglevels
+      logger.info({
         eventApp: "e2e-event-app",
+        eventDetails: "e2e-event-details",
         componentId: window.location.search.split("=")[1]
       });
     </script>

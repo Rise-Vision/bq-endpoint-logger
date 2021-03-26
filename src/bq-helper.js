@@ -8,13 +8,15 @@ const streamTableEntry = (fields = {}, url)=>{
   fields.timestamp = "AUTO";
   insertData.rows[0].json = fields;
 
+  const body = JSON.stringify(insertData);
+
   return getToken().then(token=>retry(()=>fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`
     },
-    body: JSON.stringify(insertData)
+    body
   })))
   .then(resp=>resp.json())
   .then(json=>json.error ?
