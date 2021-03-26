@@ -4,7 +4,7 @@ import {getToken} from "./token.js";
 import {retry} from "./retry-fn.js";
 
 const streamTableEntry = (fields = {}, url)=>{
-  const insertData = {...INSERT_SCHEMA};
+  const insertData = JSON.parse(JSON.stringify(INSERT_SCHEMA));
   fields.timestamp = "AUTO";
   insertData.rows[0].json = fields;
 
