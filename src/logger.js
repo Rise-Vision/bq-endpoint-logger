@@ -47,7 +47,9 @@ const fieldsError = type=>{
 }
 
 const recordLogType = (type = "INFO", config)=>{
-  if (!mandatoryFields[type].every(field=>typeof config[field] !== "undefined")) {
+  if (typeof config !== "object") {return Promise.reject(Error(fieldsError(type)))}
+
+  if (!mandatoryFields[type].every(field=>config[field])) {
     return Promise.reject(Error(fieldsError(type)));
   }
 
@@ -70,7 +72,9 @@ export const init = (initConfig = {})=>{
       return heartbeatIntervalMS;
     },
     uptimeHeartbeat(config = {}) {
-      if (!mandatoryFields.HEARTBEAT.every(field=>typeof config[field] !== "undefined")) {
+      if (typeof config !== "object") {return Promise.reject(Error(fieldsError("HEARTBEAT")))}
+
+      if (!mandatoryFields.HEARTBEAT.every(field=>config[field])) {
         return Promise.reject(Error(fieldsError("HEARTBEAT")));
       }
 

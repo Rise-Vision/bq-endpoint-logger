@@ -4,9 +4,11 @@ import {getToken} from "./token.js";
 import {retry} from "./retry-fn.js";
 
 const streamTableEntry = (fields = {}, url)=>{
-  const insertData = {...INSERT_SCHEMA};
+  const insertData = JSON.parse(JSON.stringify(INSERT_SCHEMA));
   fields.timestamp = "AUTO";
   insertData.rows[0].json = fields;
+
+  const body = JSON.stringify(insertData);
 
   return getToken().then(token=>retry(()=>fetch(url, {
     method: "POST",
@@ -14,7 +16,7 @@ const streamTableEntry = (fields = {}, url)=>{
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`
     },
-    body: JSON.stringify(insertData)
+    body
   })))
   .then(resp=>resp.json())
   .then(json=>json.error ?

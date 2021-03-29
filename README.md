@@ -35,7 +35,7 @@ npm test
 
 ### E2E
 
-Start a local webserver, load e2e.html?componentId=[random#] from localhost, confirm record in events table contains correct componentId
+Start a local webserver, load e2e.html?componentId=[random#] from localhost, verify fields in events table and heartbeat table.
 
 This can be automated if we decide to set up an e2e monitoring job.
 
