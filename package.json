@@ -1,6 +1,6 @@
 {
   "name": "bq-endpoint-logger",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "This library is meant to be used to standardize logging across all Rise Vision endpoints. It should facilitate a consistent table schema, uptime semantics, and cost analysis via standardized fields for GCS request.",
   "main": "build/es5/logger.js",
   "scripts": {
