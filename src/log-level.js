@@ -1,7 +1,15 @@
 import {retry} from "./retry-fn.js";
 
-let refreshDate = localStorage.getItem("bq-endpoint-logger-fetchdate");
-let levelCache = localStorage.getItem("bq-endpoint-logger-level");
+let refreshDate = null;
+let levelCache = null;
+
+try {
+  refreshDate = localStorage.getItem("bq-endpoint-logger-fetchdate");
+  levelCache = localStorage.getItem("bq-endpoint-logger-level");
+} catch (err) {
+  console.error(err);
+}
+
 let serviceUrl = null;
 
 const GCS_SERVICE_URL = "https://storage.googleapis.com/storage/v1/b/risevision-endpoint-loglevels/o/ENDPOINT_ID.json?alt=media";
@@ -23,7 +31,12 @@ export const getLogLevel = ()=>{
   return levelPromise = levelPromise || retry(()=>fetch(serviceUrl))
   .then(resp=>{
     refreshDate = new Date();
-    localStorage.setItem("bq-endpoint-logger-fetchdate", refreshDate);
+
+    try {
+      localStorage.setItem("bq-endpoint-logger-fetchdate", refreshDate);
+    } catch (err) {
+      console.error(err);
+    }
 
     if (resp.status === 404) {
       return {logLevel: "ERROR"};
@@ -33,7 +46,13 @@ export const getLogLevel = ()=>{
   })
   .then(json=>{
     const level = json.logLevel || "ERROR";
-    localStorage.setItem("bq-endpoint-logger-level", level);
+
+    try {
+      localStorage.setItem("bq-endpoint-logger-level", level);
+    } catch (err) {
+      console.error(err);
+    }
+
     return level;
   })
   .catch(err=>{
