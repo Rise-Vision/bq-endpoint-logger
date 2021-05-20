@@ -1,6 +1,6 @@
 import {streamHeartbeatTableEntry, streamEventsTableEntry} from "./bq-helper.js";
 import {resetToken} from "./token.js";
-import {setEndpointId, getLogLevel} from "./log-level.js";
+import {setEndpointId, getLogLevel, reset as resetLogLevel} from "./log-level.js";
 
 const heartbeatIntervalMS = 300000;
 
@@ -104,4 +104,8 @@ export const init = (initConfig = {})=>{
       return gcsFileRequestParameters;
     }
   };
+};
+
+export const loglevelReset = ()=>{
+  resetLogLevel(Date.now())
 };

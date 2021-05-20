@@ -57,4 +57,38 @@ describe("Log Level", ()=>{ // eslint-disable-line max-lines-per-function
     return getLogLevel()
     .then(level=>assert.equal(level, "ERROR"));
   });
+
+  it("resets if called without parameter", ()=>{
+    window.setTimeout = (fn, ms)=>window.setTimeoutOrig(fn, ms / 50);
+
+    let fetchCount = 0;
+    const expectedFetchCount = 2;
+
+    window.fetch = ()=>{
+      fetchCount += 1;
+      return Promise.resolve({json(){return {logLevel: "INFO"}}});
+    };
+
+    return getLogLevel()
+    .then(reset)
+    .then(getLogLevel)
+    .then(()=>assert.equal(fetchCount, expectedFetchCount));
+  });
+
+  it("does not reset if called with current now time", ()=>{
+    window.setTimeout = (fn, ms)=>window.setTimeoutOrig(fn, ms / 50);
+
+    let fetchCount = 0;
+    const expectedFetchCount = 1;
+
+    window.fetch = ()=>{
+      fetchCount += 1;
+      return Promise.resolve({json(){return {logLevel: "INFO"}}});
+    };
+
+    return getLogLevel()
+    .then(()=>reset(Date.now()))
+    .then(getLogLevel)
+    .then(()=>assert.equal(fetchCount, expectedFetchCount));
+  });
 });

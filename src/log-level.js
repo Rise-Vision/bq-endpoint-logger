@@ -61,7 +61,13 @@ export const getLogLevel = ()=>{
   });
 };
 
-export const reset = ()=>{
+const TEN_SECS_MILLIS = 10000;
+let lastReset = Date.now();
+
+export const reset = (now = Date.now() + 2 * TEN_SECS_MILLIS)=>{
+  if (now - lastReset < TEN_SECS_MILLIS) {return;}
+
   levelPromise = null;
   levelCache = null;
+  lastReset = Date.now();
 }

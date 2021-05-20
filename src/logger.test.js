@@ -1,4 +1,4 @@
-import {init} from "./logger.js";
+import {init, loglevelReset} from "./logger.js";
 import {reset} from "./log-level.js";
 
 describe("Logger", ()=>{ // eslint-disable-line max-lines-per-function
@@ -14,6 +14,12 @@ describe("Logger", ()=>{ // eslint-disable-line max-lines-per-function
   describe("Init", ()=>{
     it("requires endpointId", ()=>{
       assert.throws(()=>init({}), /endpointId/)
+    });
+  });
+
+  describe("Reset", ()=>{
+    it("allows loglevel reset", ()=>{
+      loglevelReset();
     });
   });
 
